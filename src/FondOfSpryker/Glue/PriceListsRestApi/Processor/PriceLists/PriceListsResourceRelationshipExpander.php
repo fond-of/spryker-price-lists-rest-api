@@ -68,8 +68,8 @@ class PriceListsResourceRelationshipExpander implements PriceListsResourceRelati
 
                 $resource->addRelationship($customerGroupsResource);
             }
-
-            return $resources;
         }
+
+        return $resources;
     }
 }
