@@ -2,30 +2,30 @@
 
 namespace FondOfSpryker\Glue\PriceListsRestApi;
 
-use FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceLists\PriceListsMapper;
-use FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceLists\PriceListsMapperInterface;
-use FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceLists\PriceListsResourceRelationshipExpander;
-use FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceLists\PriceListsResourceRelationshipExpanderInterface;
+use FondOfSpryker\Glue\PriceListsRestApi\Processor\Mapper\PriceListMapper;
+use FondOfSpryker\Glue\PriceListsRestApi\Processor\Mapper\PriceListMapperInterface;
+use FondOfSpryker\Glue\PriceListsRestApi\Processor\ResourceRelationshipExpander\CustomersPriceListsResourceRelationshipExpander;
+use FondOfSpryker\Glue\PriceListsRestApi\Processor\ResourceRelationshipExpander\CustomersPriceListsResourceRelationshipExpanderInterface;
 use Spryker\Glue\Kernel\AbstractFactory;
 
 class PriceListsRestApiFactory extends AbstractFactory
 {
     /**
-     * @return \FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceLists\PriceListsResourceRelationshipExpanderInterface
+     * @return \FondOfSpryker\Glue\PriceListsRestApi\Processor\ResourceRelationshipExpander\CustomersPriceListsResourceRelationshipExpanderInterface
      */
-    public function createPriceListsResourceRelationshipExpander(): PriceListsResourceRelationshipExpanderInterface
+    public function createPriceListsResourceRelationshipExpander(): CustomersPriceListsResourceRelationshipExpanderInterface
     {
-        return new PriceListsResourceRelationshipExpander(
+        return new CustomersPriceListsResourceRelationshipExpander(
             $this->getResourceBuilder(),
-            $this->createPriceListsMapper()
+            $this->createPriceListMapper()
         );
     }
 
     /**
-     * @return \FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceLists\PriceListsMapperInterface
+     * @return \FondOfSpryker\Glue\PriceListsRestApi\Processor\Mapper\PriceListMapperInterface
      */
-    protected function createPriceListsMapper(): PriceListsMapperInterface
+    protected function createPriceListMapper(): PriceListMapperInterface
     {
-        return new PriceListsMapper();
+        return new PriceListMapper();
     }
 }

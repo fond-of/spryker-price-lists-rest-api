@@ -1,13 +1,15 @@
 <?php
 
-namespace FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceLists;
+namespace FondOfSpryker\Glue\PriceListsRestApi\Processor\ResourceRelationshipExpander;
 
 use FondOfSpryker\Glue\PriceListsRestApi\PriceListsRestApiConfig;
+use FondOfSpryker\Glue\PriceListsRestApi\Processor\Mapper\PriceListMapperInterface;
 use Generated\Shared\Transfer\CustomerTransfer;
+use Generated\Shared\Transfer\RestPriceListAttributesTransfer;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface;
 use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
 
-class PriceListsResourceRelationshipExpander implements PriceListsResourceRelationshipExpanderInterface
+class CustomersPriceListsResourceRelationshipExpander implements CustomersPriceListsResourceRelationshipExpanderInterface
 {
     /**
      * @var \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface
@@ -15,17 +17,17 @@ class PriceListsResourceRelationshipExpander implements PriceListsResourceRelati
     protected $restResourceBuilder;
 
     /**
-     * @var \FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceLists\PriceListsMapperInterface
+     * @var \FondOfSpryker\Glue\PriceListsRestApi\Processor\Mapper\PriceListMapperInterface
      */
     protected $priceListsMapper;
 
     /**
      * @param \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface $restResourceBuilder
-     * @param \FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceLists\PriceListsMapperInterface $priceListsMapper
+     * @param \FondOfSpryker\Glue\PriceListsRestApi\Processor\Mapper\PriceListMapperInterface $priceListsMapper
      */
     public function __construct(
         RestResourceBuilderInterface $restResourceBuilder,
-        PriceListsMapperInterface $priceListsMapper
+        PriceListMapperInterface $priceListsMapper
     ) {
         $this->restResourceBuilder = $restResourceBuilder;
         $this->priceListsMapper = $priceListsMapper;
@@ -56,12 +58,15 @@ class PriceListsResourceRelationshipExpander implements PriceListsResourceRelati
             }
 
             foreach ($priceListCollectionTransfer->getPriceLists() as $priceListTransfer) {
-                $restPriceListsAttributesTransfer = $this->priceListsMapper->mapRestPriceListsAttributesTransfer(
-                    $priceListTransfer
+                $restPriceListAttributesTransfer = new RestPriceListAttributesTransfer();
+
+                $restPriceListsAttributesTransfer = $this->priceListsMapper->mapPriceListTransferToRestPriceListAttributesTransfer(
+                    $priceListTransfer,
+                    $restPriceListAttributesTransfer
                 );
 
                 $customerGroupsResource = $this->restResourceBuilder->createRestResource(
-                    PriceListsRestApiConfig::RESOURCE_PRICE_LIST,
+                    PriceListsRestApiConfig::RESOURCE_PRICE_LISTS,
                     $priceListTransfer->getUuid(),
                     $restPriceListsAttributesTransfer
                 );

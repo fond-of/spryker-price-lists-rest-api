@@ -1,6 +1,6 @@
 <?php
 
-namespace FondOfSpryker\Glue\PriceListsRestApi\Plugin;
+namespace FondOfSpryker\Glue\PriceListsRestApi\Plugin\GlueApplicationExtension;
 
 use FondOfSpryker\Glue\PriceListsRestApi\PriceListsRestApiConfig;
 use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
@@ -10,7 +10,7 @@ use Spryker\Glue\Kernel\AbstractPlugin;
 /**
  * @method \FondOfSpryker\Glue\PriceListsRestApi\PriceListsRestApiFactory getFactory()
  */
-class PriceListsCustomersResourcesRelationshipPlugin extends AbstractPlugin implements ResourceRelationshipPluginInterface
+class CustomersPriceListsResourceRelationshipPlugin extends AbstractPlugin implements ResourceRelationshipPluginInterface
 {
     /**
      * @api
@@ -38,6 +38,6 @@ class PriceListsCustomersResourcesRelationshipPlugin extends AbstractPlugin impl
      */
     public function getRelationshipResourceType(): string
     {
-        return PriceListsRestApiConfig::RESOURCE_PRICE_LIST;
+        return PriceListsRestApiConfig::RESOURCE_PRICE_LISTS;
     }
 }

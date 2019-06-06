@@ -1,10 +1,10 @@
 <?php
 
-namespace FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceLists;
+namespace FondOfSpryker\Glue\PriceListsRestApi\Processor\ResourceRelationshipExpander;
 
 use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
 
-interface PriceListsResourceRelationshipExpanderInterface
+interface CustomersPriceListsResourceRelationshipExpanderInterface
 {
     /**
      * @param \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceInterface[] $resources
