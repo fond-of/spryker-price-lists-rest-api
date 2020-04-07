@@ -1,6 +1,6 @@
 <?php
 
-namespace FondOfSpryker\Glue\PriceListsRestApi\Processor\Mapper;
+namespace FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceList;
 
 use Generated\Shared\Transfer\PriceListTransfer;
 use Generated\Shared\Transfer\RestPriceListAttributesTransfer;

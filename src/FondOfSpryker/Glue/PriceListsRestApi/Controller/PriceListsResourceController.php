@@ -9,7 +9,7 @@ use Spryker\Glue\Kernel\Controller\AbstractController;
 /**
  * @method \FondOfSpryker\Glue\PriceListsRestApi\PriceListsRestApiFactory getFactory()
  */
-class PriceListResourceController extends AbstractController
+class PriceListsResourceController extends AbstractController
 {
     /***
      * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
