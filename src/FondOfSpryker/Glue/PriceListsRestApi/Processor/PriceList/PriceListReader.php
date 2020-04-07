@@ -94,7 +94,7 @@ class PriceListReader implements PriceListReaderInterface
 
         $priceListTransfer = $this->getPriceListByPriceListCollection($priceListCollectionTransfer, $restRequest->getResource()->getId());
 
-        if (!$priceListTransfer && $priceListCollectionTransfer->getPriceLists()->count()) {
+        if (!$priceListTransfer && $priceListCollectionTransfer->getPriceLists()->count() === 0) {
             return $this->restApiError->addPriceListNoPermission($restResponse);
         }
 
