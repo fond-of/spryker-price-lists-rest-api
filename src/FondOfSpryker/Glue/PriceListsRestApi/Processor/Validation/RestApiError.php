@@ -17,9 +17,9 @@ class RestApiError implements RestApiErrorInterface
     public function addPriceListNotFoundError(RestResponseInterface $restResponse): RestResponseInterface
     {
         $restErrorMessageTransfer = (new RestErrorMessageTransfer())
-            ->setCode(PriceListsRestApiConfig::RESPONSE_CODE_EXTERNAL_REFERENCE_MISSING)
+            ->setCode(PriceListsRestApiConfig::RESPONSE_CODE_UUID_MISSING)
             ->setStatus(Response::HTTP_BAD_REQUEST)
-            ->setDetail(PriceListsRestApiConfig::RESPONSE_DETAILS_EXTERNAL_REFERENCE_MISSING);
+            ->setDetail(PriceListsRestApiConfig::RESPONSE_DETAILS_UUID_MISSING);
 
         return $restResponse->addError($restErrorMessageTransfer);
     }
