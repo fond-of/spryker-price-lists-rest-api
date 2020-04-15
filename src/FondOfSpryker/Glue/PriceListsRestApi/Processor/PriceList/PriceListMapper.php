@@ -1,11 +1,11 @@
 <?php
 
-namespace FondOfSpryker\Glue\PriceListsRestApi\Processor\Mapper;
+namespace FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceList;
 
 use Generated\Shared\Transfer\PriceListTransfer;
 use Generated\Shared\Transfer\RestPriceListAttributesTransfer;
 
-interface PriceListMapperInterface
+class PriceListMapper implements PriceListMapperInterface
 {
     /**
      * @param \Generated\Shared\Transfer\PriceListTransfer $priceListTransfer
@@ -16,5 +16,10 @@ interface PriceListMapperInterface
     public function mapPriceListTransferToRestPriceListAttributesTransfer(
         PriceListTransfer $priceListTransfer,
         RestPriceListAttributesTransfer $restPriceListAttributesTransfer
-    ): RestPriceListAttributesTransfer;
+    ): RestPriceListAttributesTransfer {
+        return $restPriceListAttributesTransfer->fromArray(
+            $priceListTransfer->toArray(),
+            true
+        );
+    }
 }
