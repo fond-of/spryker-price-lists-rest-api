@@ -26,12 +26,12 @@ class PriceListReader implements PriceListReaderInterface
     protected $restApiError;
 
     /**
-     * @var \FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceList\PriceListMapper
+     * @var \FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceList\PriceListMapperInterface
      */
     protected $priceListMapper;
 
     /**
-     * @var \FondOfSpryker\Client\CustomerPriceList\CustomerPriceListClientInterface
+     * @var \FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToCustomerPriceClientInterface
      */
     protected $customerPriceListClient;
 

@@ -10,7 +10,7 @@
   ],
   "require": {
     "php": ">=7.1",
-    "fond-of-spryker/customer-price-list": "dev-master",
+    "fond-of-spryker/customer-price-list": "dev-spryker_upgrade",
     "spryker/glue-application": "^1.0.0"
   },
   "require-dev": {
