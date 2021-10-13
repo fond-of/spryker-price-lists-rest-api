@@ -5,7 +5,6 @@ namespace FondOfSpryker\Glue\PriceListsRestApi\Controller;
 use Codeception\Test\Unit;
 use FondOfSpryker\Glue\PriceListsRestApi\PriceListsRestApiFactory;
 use FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceList\PriceListReaderInterface;
-use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceInterface;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
 use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
 
@@ -37,16 +36,6 @@ class PriceListsResourceControllerTest extends Unit
     protected $restResponseInterfaceMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceInterface
-     */
-    protected $restResourceInterfaceMock;
-
-    /**
-     * @var string
-     */
-    protected $id;
-
-    /**
      * @return void
      */
     protected function _before(): void
@@ -66,12 +55,6 @@ class PriceListsResourceControllerTest extends Unit
         $this->restResponseInterfaceMock = $this->getMockBuilder(RestResponseInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
-
-        $this->restResourceInterfaceMock = $this->getMockBuilder(RestResourceInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->id = 'id';
 
         $this->priceListsResourceController = new class (
             $this->priceListsRestApiFactoryMock
@@ -102,52 +85,14 @@ class PriceListsResourceControllerTest extends Unit
     /**
      * @return void
      */
-    public function testGetActionPriceListByUuid(): void
+    public function testGetAction(): void
     {
-        $this->restRequestInterfaceMock->expects($this->atLeastOnce())
-            ->method('getResource')
-            ->willReturn($this->restResourceInterfaceMock);
-
-        $this->restResourceInterfaceMock->expects($this->atLeastOnce())
-            ->method('getId')
-            ->willReturn($this->id);
-
         $this->priceListsRestApiFactoryMock->expects($this->atLeastOnce())
             ->method('createPriceListReader')
             ->willReturn($this->priceListReaderInterfaceMock);
 
         $this->priceListReaderInterfaceMock->expects($this->atLeastOnce())
-            ->method('getPriceListByUuid')
-            ->with($this->restRequestInterfaceMock)
-            ->willReturn($this->restResponseInterfaceMock);
-
-        $this->assertInstanceOf(
-            RestResponseInterface::class,
-            $this->priceListsResourceController->getAction(
-                $this->restRequestInterfaceMock
-            )
-        );
-    }
-
-    /**
-     * @return void
-     */
-    public function testGetActionAllPriceLists(): void
-    {
-        $this->restRequestInterfaceMock->expects($this->atLeastOnce())
-            ->method('getResource')
-            ->willReturn($this->restResourceInterfaceMock);
-
-        $this->restResourceInterfaceMock->expects($this->atLeastOnce())
-            ->method('getId')
-            ->willReturn(null);
-
-        $this->priceListsRestApiFactoryMock->expects($this->atLeastOnce())
-            ->method('createPriceListReader')
-            ->willReturn($this->priceListReaderInterfaceMock);
-
-        $this->priceListReaderInterfaceMock->expects($this->atLeastOnce())
-            ->method('getAllPriceLists')
+            ->method('getPriceLists')
             ->with($this->restRequestInterfaceMock)
             ->willReturn($this->restResponseInterfaceMock);
 

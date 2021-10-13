@@ -13,4 +13,9 @@
     <transfer name="PriceListCollection">
         <property name="priceLists" type="PriceList[]" singular="priceList" />
     </transfer>
+
+    <transfer name="PriceListRequest">
+        <property name="customer" type="Customer" />
+        <property name="company" type="Company" />
+    </transfer>
 </transfers>

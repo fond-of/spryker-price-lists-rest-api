@@ -18,14 +18,8 @@ class PriceListsResourceController extends AbstractController
      */
     public function getAction(RestRequestInterface $restRequest): RestResponseInterface
     {
-        if ($restRequest->getResource()->getId()) {
-            return $this->getFactory()
-                ->createPriceListReader()
-                ->getPriceListByUuid($restRequest);
-        }
-
         return $this->getFactory()
             ->createPriceListReader()
-            ->getAllPriceLists($restRequest);
+            ->getPriceLists($restRequest);
     }
 }

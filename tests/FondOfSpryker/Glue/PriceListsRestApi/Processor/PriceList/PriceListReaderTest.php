@@ -15,6 +15,9 @@ use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceInterface;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
 use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
+use Throwable;
 
 class PriceListReaderTest extends Unit
 {
@@ -57,6 +60,16 @@ class PriceListReaderTest extends Unit
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\RestUserTransfer
      */
     protected $restUserTransferMock;
+
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Symfony\Component\HttpFoundation\Request
+     */
+    protected $requestMock;
+
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Symfony\Component\HttpFoundation\ParameterBag
+     */
+    protected $paramBagMock;
 
     /**
      * @var int
@@ -128,6 +141,14 @@ class PriceListReaderTest extends Unit
             ->getMock();
 
         $this->restUserTransferMock = $this->getMockBuilder(RestUserTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->requestMock = $this->getMockBuilder(Request::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->paramBagMock = $this->getMockBuilder(ParameterBag::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -510,5 +531,219 @@ class PriceListReaderTest extends Unit
                 $this->restRequestInterfaceMock
             )
         );
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetPriceListsWillRunGetPriceListByUuid(): void
+    {
+        $this->requestMock->query = $this->paramBagMock;
+
+        $this->restRequestInterfaceMock->expects($this->once())
+            ->method('getHttpRequest')
+            ->willReturn($this->requestMock);
+
+        $this->restRequestInterfaceMock->expects($this->atLeastOnce())
+            ->method('getResource')
+            ->willReturn($this->restResourceInterfaceMock);
+
+        $this->paramBagMock->expects($this->atLeastOnce())
+            ->method('get')
+            ->willReturn(null);
+
+        $this->restResourceInterfaceMock->expects($this->atLeastOnce())
+            ->method('getId')
+            ->willReturn('1');
+
+        try {
+            $this->priceListReader->getPriceLists(
+                $this->restRequestInterfaceMock
+            );
+        } catch (Throwable $exception) {
+            $this->assertSame('Call to a member function getSurrogateIdentifier() on null', $exception->getMessage());
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetPriceListsWillRunGetAllPriceLists(): void
+    {
+        $this->requestMock->query = $this->paramBagMock;
+
+        $this->restRequestInterfaceMock->expects($this->once())
+            ->method('getHttpRequest')
+            ->willReturn($this->requestMock);
+
+        $this->restRequestInterfaceMock->expects($this->atLeastOnce())
+            ->method('getResource')
+            ->willReturn($this->restResourceInterfaceMock);
+
+        $this->paramBagMock->expects($this->atLeastOnce())
+            ->method('get')
+            ->willReturn(null);
+
+        $this->restResourceInterfaceMock->expects($this->atLeastOnce())
+            ->method('getId')
+            ->willReturn(null);
+
+        try {
+            $this->priceListReader->getPriceLists(
+                $this->restRequestInterfaceMock
+            );
+        } catch (Throwable $exception) {
+            $this->assertSame('Call to a member function getSurrogateIdentifier() on null', $exception->getMessage());
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetPriceListsWillRunGetPriceListByCompanyUuid(): void
+    {
+        $this->requestMock->query = $this->paramBagMock;
+
+        $this->restRequestInterfaceMock->expects($this->once())
+            ->method('getHttpRequest')
+            ->willReturn($this->requestMock);
+
+        $this->restRequestInterfaceMock->expects($this->once())
+            ->method('getResource')
+            ->willReturn($this->restResourceInterfaceMock);
+
+        $this->paramBagMock->expects($this->once())
+            ->method('get')
+            ->willReturn('company uuid');
+
+        $this->restResourceInterfaceMock->expects($this->once())
+            ->method('getId')
+            ->willReturn(null);
+
+        $this->priceListsRestApiToCustomerPriceClientInterfaceMock->expects($this->once())
+            ->method('getPriceListsByIdCustomerAndCompanyUuid')
+            ->willReturn($this->priceListCollectionTransferMock);
+
+        $this->priceListCollectionTransferMock->expects($this->atLeastOnce())
+            ->method('getPriceLists')
+            ->willReturn(new ArrayObject([$this->priceListTransferMock]));
+
+        $this->restResourceBuilderInterfaceMock->expects($this->atLeastOnce())
+            ->method('createRestResource')
+            ->willReturn($this->restResourceInterfaceMock);
+
+        $this->priceListMapperInterfaceMock->expects($this->atLeastOnce())
+            ->method('mapPriceListTransferToRestPriceListAttributesTransfer')
+            ->with(
+                $this->priceListTransferMock,
+                new RestPriceListAttributesTransfer()
+            )->willReturn($this->restPriceListAttributesTransferMock);
+
+        $this->restResourceBuilderInterfaceMock->expects($this->atLeastOnce())
+            ->method('createRestResponse')
+            ->willReturn($this->restResponseInterfaceMock);
+
+        $this->restRequestInterfaceMock->expects($this->atLeastOnce())
+            ->method('getRestUser')
+            ->willReturn($this->restUserTransferMock);
+
+        $this->restUserTransferMock->expects($this->atLeastOnce())
+            ->method('getSurrogateIdentifier')
+            ->willReturn($this->surrogateIdentifier);
+
+        $this->priceListsRestApiToCustomerPriceClientInterfaceMock->expects($this->atLeastOnce())
+            ->method('getPriceListCollectionByIdCustomer')
+            ->willReturn($this->priceListCollectionTransferMock);
+
+        $this->priceListTransferMock->expects($this->atLeastOnce())
+            ->method('getUuid')
+            ->willReturn($this->uuid);
+
+        $this->restResponseInterfaceMock->expects($this->atLeastOnce())
+            ->method('addResource')
+            ->with($this->restResourceInterfaceMock)
+            ->willReturnSelf();
+
+        $this->assertInstanceOf(
+            RestResponseInterface::class,
+            $this->priceListReader->getAllPriceLists($this->restRequestInterfaceMock)
+        );
+
+        $this->priceListReader->getPriceLists($this->restRequestInterfaceMock);
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetPriceListsWillRunGetPriceListByCompanyUuidAlsoWithPriceListUuid(): void
+    {
+        $this->requestMock->query = $this->paramBagMock;
+
+        $this->restRequestInterfaceMock->expects($this->once())
+            ->method('getHttpRequest')
+            ->willReturn($this->requestMock);
+
+        $this->restRequestInterfaceMock->expects($this->atLeastOnce())
+            ->method('getResource')
+            ->willReturn($this->restResourceInterfaceMock);
+
+        $this->paramBagMock->expects($this->once())
+            ->method('get')
+            ->willReturn('company uuid');
+
+        $this->restResourceInterfaceMock->expects($this->atLeastOnce())
+            ->method('getId')
+            ->willReturn('price list uuid');
+
+        $this->priceListsRestApiToCustomerPriceClientInterfaceMock->expects($this->once())
+            ->method('getPriceListsByIdCustomerAndCompanyUuid')
+            ->willReturn($this->priceListCollectionTransferMock);
+
+        $this->priceListCollectionTransferMock->expects($this->atLeastOnce())
+            ->method('getPriceLists')
+            ->willReturn(new ArrayObject([$this->priceListTransferMock]));
+
+        $this->restResourceBuilderInterfaceMock->expects($this->atLeastOnce())
+            ->method('createRestResource')
+            ->willReturn($this->restResourceInterfaceMock);
+
+        $this->priceListMapperInterfaceMock->expects($this->atLeastOnce())
+            ->method('mapPriceListTransferToRestPriceListAttributesTransfer')
+            ->with(
+                $this->priceListTransferMock,
+                new RestPriceListAttributesTransfer()
+            )->willReturn($this->restPriceListAttributesTransferMock);
+
+        $this->restResourceBuilderInterfaceMock->expects($this->atLeastOnce())
+            ->method('createRestResponse')
+            ->willReturn($this->restResponseInterfaceMock);
+
+        $this->restRequestInterfaceMock->expects($this->atLeastOnce())
+            ->method('getRestUser')
+            ->willReturn($this->restUserTransferMock);
+
+        $this->restUserTransferMock->expects($this->atLeastOnce())
+            ->method('getSurrogateIdentifier')
+            ->willReturn($this->surrogateIdentifier);
+
+        $this->priceListsRestApiToCustomerPriceClientInterfaceMock->expects($this->atLeastOnce())
+            ->method('getPriceListCollectionByIdCustomer')
+            ->willReturn($this->priceListCollectionTransferMock);
+
+        $this->priceListTransferMock->expects($this->atLeastOnce())
+            ->method('getUuid')
+            ->willReturn($this->uuid);
+
+        $this->restResponseInterfaceMock->expects($this->atLeastOnce())
+            ->method('addResource')
+            ->with($this->restResourceInterfaceMock)
+            ->willReturnSelf();
+
+        $this->assertInstanceOf(
+            RestResponseInterface::class,
+            $this->priceListReader->getAllPriceLists($this->restRequestInterfaceMock)
+        );
+
+        $this->priceListReader->getPriceLists($this->restRequestInterfaceMock);
     }
 }

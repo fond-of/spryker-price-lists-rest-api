@@ -12,6 +12,13 @@ interface PriceListReaderInterface
      *
      * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
      */
+    public function getPriceLists(RestRequestInterface $restRequest): RestResponseInterface;
+
+    /**
+     * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
+     *
+     * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
+     */
     public function getAllPriceLists(RestRequestInterface $restRequest): RestResponseInterface;
 
     /**
