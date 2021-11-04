@@ -85,7 +85,7 @@ class PriceListsRestApiFactoryTest extends Unit
 
         $this->containerMock->expects($this->atLeastOnce())
             ->method('get')
-            ->with(PriceListsRestApiDependencyProvider::CLIENT_CUSTOMER_PRICE_LIST)
+            ->with(PriceListsRestApiDependencyProvider::CLIENT_PRICE_LIST)
             ->willReturn($this->priceListsRestApiToCustomerPriceClientInterfaceMock);
 
         $this->assertInstanceOf(
