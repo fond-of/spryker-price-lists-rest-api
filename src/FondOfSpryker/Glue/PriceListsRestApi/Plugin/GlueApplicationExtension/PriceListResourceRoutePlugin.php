@@ -1,6 +1,6 @@
 <?php
 
-namespace FondOfSpryker\Glue\PriceListsRestApi\Plugin;
+namespace FondOfSpryker\Glue\PriceListsRestApi\Plugin\GlueApplicationExtension;
 
 use FondOfSpryker\Glue\PriceListsRestApi\PriceListsRestApiConfig;
 use Generated\Shared\Transfer\RestPriceListAttributesTransfer;
@@ -18,10 +18,8 @@ class PriceListResourceRoutePlugin extends AbstractPlugin implements ResourceRou
     public function configure(
         ResourceRouteCollectionInterface $resourceRouteCollection
     ): ResourceRouteCollectionInterface {
-        $resourceRouteCollection
+        return $resourceRouteCollection
             ->addGet(PriceListsRestApiConfig::ACTION_PRICE_LISTS_GET, true);
-
-        return $resourceRouteCollection;
     }
 
     /**

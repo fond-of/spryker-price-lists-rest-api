@@ -5,7 +5,7 @@ namespace FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client;
 use FondOfSpryker\Client\PriceList\PriceListClientInterface;
 use Generated\Shared\Transfer\PriceListListTransfer;
 
-class PriceListsRestApiToPriceListClient implements PriceListsRestApiToPriceListClientInterface
+class PriceListsRestApiToPriceListClientBridge implements PriceListsRestApiToPriceListClientInterface
 {
     /**
      * @var \FondOfSpryker\Client\PriceList\PriceListClientInterface

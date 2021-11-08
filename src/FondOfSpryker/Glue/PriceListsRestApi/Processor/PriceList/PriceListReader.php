@@ -3,7 +3,7 @@
 namespace FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceList;
 
 use ArrayObject;
-use FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToPriceListClient;
+use FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToPriceListClientInterface;
 use FondOfSpryker\Glue\PriceListsRestApi\PriceListsRestApiConfig;
 use FondOfSpryker\Glue\PriceListsRestApi\Processor\Validation\RestApiErrorInterface;
 use Generated\Shared\Transfer\PriceListCollectionTransfer;
@@ -32,7 +32,7 @@ class PriceListReader implements PriceListReaderInterface
     protected $priceListMapper;
 
     /**
-     * @var \FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToPriceListClient
+     * @var \FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToPriceListClientInterface
      */
     protected $priceListClient;
 
@@ -44,14 +44,14 @@ class PriceListReader implements PriceListReaderInterface
     /**
      * @param \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface $restResourceBuilder
      * @param \FondOfSpryker\Glue\PriceListsRestApi\Processor\Validation\RestApiErrorInterface $restApiError
-     * @param \FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToPriceListClient $priceListClient
+     * @param \FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToPriceListClientInterface $priceListClient
      * @param \FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceList\PriceListMapperInterface $priceListMapper
      * @param array<\FondOfOryx\Glue\PriceListsRestApiExtension\Dependency\Plugin\FilterFieldsExpanderPluginInterface> $filterFieldsExpanderPlugins
      */
     public function __construct(
         RestResourceBuilderInterface $restResourceBuilder,
         RestApiErrorInterface $restApiError,
-        PriceListsRestApiToPriceListClient $priceListClient,
+        PriceListsRestApiToPriceListClientInterface $priceListClient,
         PriceListMapperInterface $priceListMapper,
         array $filterFieldsExpanderPlugins
     ) {
@@ -97,8 +97,9 @@ class PriceListReader implements PriceListReaderInterface
     public function getPriceListByUuid(RestRequestInterface $restRequest): RestResponseInterface
     {
         $restResponse = $this->restResourceBuilder->createRestResponse();
+        $uuid = $restRequest->getResource()->getId();
 
-        if ($restRequest->getResource()->getId() === null) {
+        if ($uuid === null) {
             return $this->restApiError->addPriceListIdMissingError($restResponse);
         }
 
@@ -113,12 +114,14 @@ class PriceListReader implements PriceListReaderInterface
 
         $priceListListTransfer = $this->priceListClient->findPriceLists($priceListListTransfer);
 
-        if ($priceListListTransfer->getPriceLists()->count() !== 1) {
+        $priceListTransfers = $priceListListTransfer->getPriceLists();
+
+        if ($priceListTransfers->count() !== 1 || $priceListTransfers->offsetGet(0)->getUuid() !== $uuid) {
             return $this->restApiError->addPriceListNotFoundError($restResponse);
         }
 
         return $this->addPriceListTransferToResponse(
-            $priceListListTransfer->getPriceLists()->offsetGet(0),
+            $priceListTransfers->offsetGet(0),
             $restResponse
         );
     }

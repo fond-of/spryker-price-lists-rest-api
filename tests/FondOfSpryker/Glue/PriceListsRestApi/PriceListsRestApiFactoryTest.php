@@ -3,32 +3,32 @@
 namespace FondOfSpryker\Glue\PriceListsRestApi;
 
 use Codeception\Test\Unit;
-use FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToCustomerPriceClientInterface;
-use FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceList\PriceListReaderInterface;
+use FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToPriceListClientInterface;
+use FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceList\PriceListReader;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface;
 use Spryker\Glue\Kernel\Container;
 
 class PriceListsRestApiFactoryTest extends Unit
 {
     /**
-     * @var \FondOfSpryker\Glue\PriceListsRestApi\PriceListsRestApiFactory
-     */
-    protected $priceListsRestApiFactory;
-
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface
      */
-    protected $restResourceBuilderInterfaceMock;
+    protected $restResourceBuilderMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToCustomerPriceClientInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToPriceListClientInterface
      */
-    protected $priceListsRestApiToCustomerPriceClientInterfaceMock;
+    protected $priceClientMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\Kernel\Container
      */
     protected $containerMock;
+
+    /**
+     * @var \FondOfSpryker\Glue\PriceListsRestApi\PriceListsRestApiFactory
+     */
+    protected $factory;
 
     /**
      * @return void
@@ -39,17 +39,15 @@ class PriceListsRestApiFactoryTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->restResourceBuilderInterfaceMock = $this->getMockBuilder(RestResourceBuilderInterface::class)
+        $this->restResourceBuilderMock = $this->getMockBuilder(RestResourceBuilderInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->priceListsRestApiToCustomerPriceClientInterfaceMock = $this->getMockBuilder(PriceListsRestApiToCustomerPriceClientInterface::class)
+        $this->priceClientMock = $this->getMockBuilder(PriceListsRestApiToPriceListClientInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->priceListsRestApiFactory = new class (
-            $this->restResourceBuilderInterfaceMock
-        ) extends PriceListsRestApiFactory {
+        $this->factory = new class ($this->restResourceBuilderMock) extends PriceListsRestApiFactory {
             /**
              * @var \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface
              */
@@ -71,13 +69,14 @@ class PriceListsRestApiFactoryTest extends Unit
                 return $this->restResourceBuilder;
             }
         };
-        $this->priceListsRestApiFactory->setContainer($this->containerMock);
+
+        $this->factory->setContainer($this->containerMock);
     }
 
     /**
      * @return void
      */
-    public function testCreatePriceListMapper(): void
+    public function testCreatePriceListReader(): void
     {
         $this->containerMock->expects($this->atLeastOnce())
             ->method('has')
@@ -85,12 +84,14 @@ class PriceListsRestApiFactoryTest extends Unit
 
         $this->containerMock->expects($this->atLeastOnce())
             ->method('get')
-            ->with(PriceListsRestApiDependencyProvider::CLIENT_PRICE_LIST)
-            ->willReturn($this->priceListsRestApiToCustomerPriceClientInterfaceMock);
+            ->withConsecutive(
+                [PriceListsRestApiDependencyProvider::CLIENT_PRICE_LIST],
+                [PriceListsRestApiDependencyProvider::PLUGINS_FILTER_FIELDS_EXPANDER]
+            )->willReturnOnConsecutiveCalls($this->priceClientMock, []);
 
-        $this->assertInstanceOf(
-            PriceListReaderInterface::class,
-            $this->priceListsRestApiFactory->createPriceListReader()
+        static::assertInstanceOf(
+            PriceListReader::class,
+            $this->factory->createPriceListReader()
         );
     }
 }

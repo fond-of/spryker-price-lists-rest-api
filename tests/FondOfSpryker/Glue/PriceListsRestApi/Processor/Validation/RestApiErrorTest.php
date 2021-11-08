@@ -3,26 +3,29 @@
 namespace FondOfSpryker\Glue\PriceListsRestApi\Processor\Validation;
 
 use Codeception\Test\Unit;
+use FondOfSpryker\Glue\PriceListsRestApi\PriceListsRestApiConfig;
+use Generated\Shared\Transfer\RestErrorMessageTransfer;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class RestApiErrorTest extends Unit
 {
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
+     */
+    protected $restResponseMock;
+
     /**
      * @var \FondOfSpryker\Glue\PriceListsRestApi\Processor\Validation\RestApiError
      */
     protected $restApiError;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
-     */
-    protected $restResponseInterfaceMock;
-
-    /**
      * @return void
      */
     protected function _before(): void
     {
-        $this->restResponseInterfaceMock = $this->getMockBuilder(RestResponseInterface::class)
+        $this->restResponseMock = $this->getMockBuilder(RestResponseInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -34,14 +37,22 @@ class RestApiErrorTest extends Unit
      */
     public function testAddPriceListNotFoundError(): void
     {
-        $this->restResponseInterfaceMock->expects($this->atLeastOnce())
+        $this->restResponseMock->expects(static::atLeastOnce())
             ->method('addError')
-            ->willReturnSelf();
+            ->with(
+                static::callback(
+                    static function (RestErrorMessageTransfer $restErrorMessageTransfer) {
+                        return $restErrorMessageTransfer->getCode() === PriceListsRestApiConfig::RESPONSE_CODE_PRICE_LIST_NOT_FOUND
+                            && $restErrorMessageTransfer->getStatus() === Response::HTTP_NOT_FOUND
+                            && $restErrorMessageTransfer->getDetail() === PriceListsRestApiConfig::RESPONSE_DETAILS_PRICE_LIST_NOT_FOUND;
+                    }
+                )
+            )->willReturnSelf();
 
-        $this->assertInstanceOf(
-            RestResponseInterface::class,
+        static::assertEquals(
+            $this->restResponseMock,
             $this->restApiError->addPriceListNotFoundError(
-                $this->restResponseInterfaceMock
+                $this->restResponseMock
             )
         );
     }
@@ -51,31 +62,22 @@ class RestApiErrorTest extends Unit
      */
     public function testAddPriceListIdMissingError(): void
     {
-        $this->restResponseInterfaceMock->expects($this->atLeastOnce())
+        $this->restResponseMock->expects(static::atLeastOnce())
             ->method('addError')
-            ->willReturnSelf();
+            ->with(
+                static::callback(
+                    static function (RestErrorMessageTransfer $restErrorMessageTransfer) {
+                        return $restErrorMessageTransfer->getCode() === PriceListsRestApiConfig::RESPONSE_CODE_UUID_MISSING
+                            && $restErrorMessageTransfer->getStatus() === Response::HTTP_BAD_REQUEST
+                            && $restErrorMessageTransfer->getDetail() === PriceListsRestApiConfig::RESPONSE_DETAILS_UUID_MISSING;
+                    }
+                )
+            )->willReturnSelf();
 
-        $this->assertInstanceOf(
-            RestResponseInterface::class,
+        static::assertEquals(
+            $this->restResponseMock,
             $this->restApiError->addPriceListIdMissingError(
-                $this->restResponseInterfaceMock
-            )
-        );
-    }
-
-    /**
-     * @return void
-     */
-    public function testAddPriceListNoPermission(): void
-    {
-        $this->restResponseInterfaceMock->expects($this->atLeastOnce())
-            ->method('addError')
-            ->willReturnSelf();
-
-        $this->assertInstanceOf(
-            RestResponseInterface::class,
-            $this->restApiError->addPriceListNoPermission(
-                $this->restResponseInterfaceMock
+                $this->restResponseMock
             )
         );
     }

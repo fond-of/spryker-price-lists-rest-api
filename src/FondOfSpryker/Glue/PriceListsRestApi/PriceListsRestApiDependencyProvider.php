@@ -2,7 +2,7 @@
 
 namespace FondOfSpryker\Glue\PriceListsRestApi;
 
-use FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToPriceListClient;
+use FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToPriceListClientBridge;
 use Spryker\Glue\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Glue\Kernel\Container;
 
@@ -34,7 +34,7 @@ class PriceListsRestApiDependencyProvider extends AbstractBundleDependencyProvid
     protected function addPriceListClient(Container $container): Container
     {
         $container[static::CLIENT_PRICE_LIST] = static function (Container $container) {
-            return new PriceListsRestApiToPriceListClient(
+            return new PriceListsRestApiToPriceListClientBridge(
                 $container->getLocator()->priceList()->client()
             );
         };
