@@ -12,7 +12,7 @@
     "php": ">=7.3",
     "spryker/glue-application": "^1.0.0",
     "fond-of-oryx/price-lists-rest-api-extension": "^1.0.0",
-    "fond-of-spryker/price-list": "^1.0.0"
+    "fond-of-spryker/price-list": "dev-master"
   },
   "require-dev": {
     "fond-of-codeception/spryker": "^1.0",
