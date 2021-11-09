@@ -2,7 +2,7 @@
 
 namespace FondOfSpryker\Glue\PriceListsRestApi;
 
-use FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToCustomerPriceClientInterface;
+use FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToPriceListClientInterface;
 use FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceList\PriceListMapper;
 use FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceList\PriceListMapperInterface;
 use FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceList\PriceListReader;
@@ -21,8 +21,9 @@ class PriceListsRestApiFactory extends AbstractFactory
         return new PriceListReader(
             $this->getResourceBuilder(),
             $this->createRestApiError(),
-            $this->createCustomerPriceListClient(),
-            $this->createPriceListMapper()
+            $this->getPriceListClient(),
+            $this->createPriceListMapper(),
+            $this->getFilterFieldsExpanderPlugins()
         );
     }
 
@@ -43,10 +44,18 @@ class PriceListsRestApiFactory extends AbstractFactory
     }
 
     /**
-     * @return \FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToCustomerPriceClientInterface
+     * @return \FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToPriceListClientInterface
      */
-    protected function createCustomerPriceListClient(): PriceListsRestApiToCustomerPriceClientInterface
+    protected function getPriceListClient(): PriceListsRestApiToPriceListClientInterface
     {
-        return $this->getProvidedDependency(PriceListsRestApiDependencyProvider::CLIENT_CUSTOMER_PRICE_LIST);
+        return $this->getProvidedDependency(PriceListsRestApiDependencyProvider::CLIENT_PRICE_LIST);
+    }
+
+    /**
+     * @return array<\FondOfOryx\Glue\PriceListsRestApiExtension\Dependency\Plugin\FilterFieldsExpanderPluginInterface>
+     */
+    protected function getFilterFieldsExpanderPlugins(): array
+    {
+        return $this->getProvidedDependency(PriceListsRestApiDependencyProvider::PLUGINS_FILTER_FIELDS_EXPANDER);
     }
 }

@@ -44,11 +44,11 @@ class PriceListMapperTest extends Unit
      */
     public function testMapPriceListTransferToRestPriceListAttributesTransfer(): void
     {
-        $this->priceListTransferMock->expects($this->atLeastOnce())
+        $this->priceListTransferMock->expects(static::atLeastOnce())
             ->method('toArray')
             ->willReturn([]);
 
-        $this->restPriceListAttributesTransferMock->expects($this->atLeastOnce())
+        $this->restPriceListAttributesTransferMock->expects(static::atLeastOnce())
             ->method('fromArray')
             ->with([], true)
             ->willReturnSelf();

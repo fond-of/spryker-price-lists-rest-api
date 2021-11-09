@@ -13,4 +13,10 @@
     <transfer name="PriceListCollection">
         <property name="priceLists" type="PriceList[]" singular="priceList" />
     </transfer>
+
+    <transfer name="PriceListList">
+        <property name="idCustomer" type="int"/>
+        <property name="priceLists" type="PriceList[]" singular="priceList" />
+        <property name="queryJoins" type="QueryJoinCollection"/>
+    </transfer>
 </transfers>

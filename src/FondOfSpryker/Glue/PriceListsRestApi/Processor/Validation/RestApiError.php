@@ -17,9 +17,9 @@ class RestApiError implements RestApiErrorInterface
     public function addPriceListNotFoundError(RestResponseInterface $restResponse): RestResponseInterface
     {
         $restErrorMessageTransfer = (new RestErrorMessageTransfer())
-            ->setCode(PriceListsRestApiConfig::RESPONSE_CODE_UUID_MISSING)
-            ->setStatus(Response::HTTP_BAD_REQUEST)
-            ->setDetail(PriceListsRestApiConfig::RESPONSE_DETAILS_UUID_MISSING);
+            ->setCode(PriceListsRestApiConfig::RESPONSE_CODE_PRICE_LIST_NOT_FOUND)
+            ->setStatus(Response::HTTP_NOT_FOUND)
+            ->setDetail(PriceListsRestApiConfig::RESPONSE_DETAILS_PRICE_LIST_NOT_FOUND);
 
         return $restResponse->addError($restErrorMessageTransfer);
     }
@@ -32,24 +32,9 @@ class RestApiError implements RestApiErrorInterface
     public function addPriceListIdMissingError(RestResponseInterface $restResponse): RestResponseInterface
     {
         $restErrorMessageTransfer = (new RestErrorMessageTransfer())
-            ->setCode(PriceListsRestApiConfig::RESPONSE_CODE_PRICE_LIST_NOT_FOUND)
+            ->setCode(PriceListsRestApiConfig::RESPONSE_CODE_UUID_MISSING)
             ->setStatus(Response::HTTP_BAD_REQUEST)
-            ->setDetail(PriceListsRestApiConfig::RESPONSE_DETAILS_PRICE_LIST_NOT_FOUND);
-
-        return $restResponse->addError($restErrorMessageTransfer);
-    }
-
-    /**
-     * @param \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface $restResponse
-     *
-     * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
-     */
-    public function addPriceListNoPermission(RestResponseInterface $restResponse): RestResponseInterface
-    {
-        $restErrorMessageTransfer = (new RestErrorMessageTransfer())
-            ->setCode(PriceListsRestApiConfig::RESPONSE_CODE_NO_PERMISSION)
-            ->setStatus(Response::HTTP_BAD_REQUEST)
-            ->setDetail(PriceListsRestApiConfig::RESPONSE_DETAILS_NO_PERMISSION);
+            ->setDetail(PriceListsRestApiConfig::RESPONSE_DETAILS_UUID_MISSING);
 
         return $restResponse->addError($restErrorMessageTransfer);
     }

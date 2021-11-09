@@ -9,16 +9,13 @@
     }
   ],
   "require": {
-    "php": ">=7.1",
-    "fond-of-spryker/customer-price-list": "dev-spryker_upgrade",
-    "spryker/glue-application": "^1.0.0"
+    "php": ">=7.3",
+    "spryker/glue-application": "^1.0.0",
+    "fond-of-oryx/price-lists-rest-api-extension": "^1.0.0",
+    "fond-of-spryker/price-list": "^1.0.0"
   },
   "require-dev": {
-    "codeception/codeception": "^2.4",
     "fond-of-codeception/spryker": "^1.0",
-    "php-coveralls/php-coveralls": "^2.1",
-    "phpro/grumphp": "^0.14",
-    "sebastian/phpcpd": "^4.0",
     "spryker/code-sniffer": "^0.12"
   },
   "minimum-stability": "dev",

@@ -2,11 +2,12 @@
 
 namespace FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceList;
 
-use FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToCustomerPriceClientInterface;
+use ArrayObject;
+use FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToPriceListClientInterface;
 use FondOfSpryker\Glue\PriceListsRestApi\PriceListsRestApiConfig;
 use FondOfSpryker\Glue\PriceListsRestApi\Processor\Validation\RestApiErrorInterface;
-use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\PriceListCollectionTransfer;
+use Generated\Shared\Transfer\PriceListListTransfer;
 use Generated\Shared\Transfer\PriceListTransfer;
 use Generated\Shared\Transfer\RestPriceListAttributesTransfer;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface;
@@ -31,26 +32,34 @@ class PriceListReader implements PriceListReaderInterface
     protected $priceListMapper;
 
     /**
-     * @var \FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToCustomerPriceClientInterface
+     * @var \FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToPriceListClientInterface
      */
-    protected $customerPriceListClient;
+    protected $priceListClient;
+
+    /**
+     * @var array<\FondOfOryx\Glue\PriceListsRestApiExtension\Dependency\Plugin\FilterFieldsExpanderPluginInterface>
+     */
+    protected $filterFieldsExpanderPlugins;
 
     /**
      * @param \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface $restResourceBuilder
      * @param \FondOfSpryker\Glue\PriceListsRestApi\Processor\Validation\RestApiErrorInterface $restApiError
-     * @param \FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToCustomerPriceClientInterface $customerPriceListClient
+     * @param \FondOfSpryker\Glue\PriceListsRestApi\Dependency\Client\PriceListsRestApiToPriceListClientInterface $priceListClient
      * @param \FondOfSpryker\Glue\PriceListsRestApi\Processor\PriceList\PriceListMapperInterface $priceListMapper
+     * @param array<\FondOfOryx\Glue\PriceListsRestApiExtension\Dependency\Plugin\FilterFieldsExpanderPluginInterface> $filterFieldsExpanderPlugins
      */
     public function __construct(
         RestResourceBuilderInterface $restResourceBuilder,
         RestApiErrorInterface $restApiError,
-        PriceListsRestApiToCustomerPriceClientInterface $customerPriceListClient,
-        PriceListMapperInterface $priceListMapper
+        PriceListsRestApiToPriceListClientInterface $priceListClient,
+        PriceListMapperInterface $priceListMapper,
+        array $filterFieldsExpanderPlugins
     ) {
         $this->restResourceBuilder = $restResourceBuilder;
         $this->restApiError = $restApiError;
-        $this->customerPriceListClient = $customerPriceListClient;
+        $this->priceListClient = $priceListClient;
         $this->priceListMapper = $priceListMapper;
+        $this->filterFieldsExpanderPlugins = $filterFieldsExpanderPlugins;
     }
 
     /**
@@ -60,18 +69,24 @@ class PriceListReader implements PriceListReaderInterface
      */
     public function getAllPriceLists(RestRequestInterface $restRequest): RestResponseInterface
     {
-        $restResponse = $this->restResourceBuilder->createRestResponse();
+        $filterFieldTransfers = new ArrayObject();
 
-        $customerTransfer = (new CustomerTransfer())
-            ->setIdCustomer($restRequest->getRestUser()->getSurrogateIdentifier());
-
-        $priceListCollectionTransfer = $this->customerPriceListClient->getPriceListCollectionByIdCustomer($customerTransfer);
-
-        if ($priceListCollectionTransfer->getPriceLists()->count() === 0) {
-            return $this->restApiError->addPriceListNotFoundError($restResponse);
+        foreach ($this->filterFieldsExpanderPlugins as $filterFieldsExpanderPlugin) {
+            $filterFieldTransfers = $filterFieldsExpanderPlugin->expand($restRequest, $filterFieldTransfers);
         }
 
-        return $this->addPriceListCollectionTransferToResponse($priceListCollectionTransfer, $restResponse);
+        $priceListListTransfer = (new PriceListListTransfer())
+            ->setFilterFields($filterFieldTransfers);
+
+        $priceListListTransfer = $this->priceListClient->findPriceLists($priceListListTransfer);
+
+        $priceListCollectionTransfer = (new PriceListCollectionTransfer())
+            ->setPriceLists($priceListListTransfer->getPriceLists());
+
+        return $this->addPriceListCollectionTransferToResponse(
+            $priceListCollectionTransfer,
+            $this->restResourceBuilder->createRestResponse()
+        );
     }
 
     /**
@@ -82,44 +97,33 @@ class PriceListReader implements PriceListReaderInterface
     public function getPriceListByUuid(RestRequestInterface $restRequest): RestResponseInterface
     {
         $restResponse = $this->restResourceBuilder->createRestResponse();
+        $uuid = $restRequest->getResource()->getId();
 
-        if (!$restRequest->getResource()->getId()) {
+        if ($uuid === null) {
             return $this->restApiError->addPriceListIdMissingError($restResponse);
         }
 
-        $customerTransfer = (new CustomerTransfer())
-            ->setIdCustomer($restRequest->getRestUser()->getSurrogateIdentifier());
+        $filterFieldTransfers = new ArrayObject();
 
-        $priceListCollectionTransfer = $this->customerPriceListClient->getPriceListCollectionByIdCustomer($customerTransfer);
-
-        $priceListTransfer = $this->getPriceListByPriceListCollection($priceListCollectionTransfer, $restRequest->getResource()->getId());
-
-        if (!$priceListTransfer && $priceListCollectionTransfer->getPriceLists()->count() === 0) {
-            return $this->restApiError->addPriceListNoPermission($restResponse);
+        foreach ($this->filterFieldsExpanderPlugins as $filterFieldsExpanderPlugin) {
+            $filterFieldTransfers = $filterFieldsExpanderPlugin->expand($restRequest, $filterFieldTransfers);
         }
 
-        if (!$priceListTransfer) {
+        $priceListListTransfer = (new PriceListListTransfer())
+            ->setFilterFields($filterFieldTransfers);
+
+        $priceListListTransfer = $this->priceListClient->findPriceLists($priceListListTransfer);
+
+        $priceListTransfers = $priceListListTransfer->getPriceLists();
+
+        if ($priceListTransfers->count() !== 1 || $priceListTransfers->offsetGet(0)->getUuid() !== $uuid) {
             return $this->restApiError->addPriceListNotFoundError($restResponse);
         }
 
-        return $this->addPriceListTransferToResponse($priceListTransfer, $restResponse);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\PriceListCollectionTransfer $priceListCollectionTransfer
-     * @param string $uuidPriceList
-     *
-     * @return \Generated\Shared\Transfer\PriceListTransfer|null
-     */
-    protected function getPriceListByPriceListCollection(PriceListCollectionTransfer $priceListCollectionTransfer, string $uuidPriceList): ?PriceListTransfer
-    {
-        foreach ($priceListCollectionTransfer->getPriceLists() as $priceListTransfer) {
-            if ($priceListTransfer->getUuid() === $uuidPriceList) {
-                return $priceListTransfer;
-            }
-        }
-
-        return null;
+        return $this->addPriceListTransferToResponse(
+            $priceListTransfers->offsetGet(0),
+            $restResponse
+        );
     }
 
     /**
