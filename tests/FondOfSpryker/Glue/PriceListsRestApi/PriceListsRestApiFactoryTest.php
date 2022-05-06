@@ -86,12 +86,12 @@ class PriceListsRestApiFactoryTest extends Unit
             ->method('get')
             ->withConsecutive(
                 [PriceListsRestApiDependencyProvider::CLIENT_PRICE_LIST],
-                [PriceListsRestApiDependencyProvider::PLUGINS_FILTER_FIELDS_EXPANDER]
+                [PriceListsRestApiDependencyProvider::PLUGINS_FILTER_FIELDS_EXPANDER],
             )->willReturnOnConsecutiveCalls($this->priceClientMock, []);
 
         static::assertInstanceOf(
             PriceListReader::class,
-            $this->factory->createPriceListReader()
+            $this->factory->createPriceListReader(),
         );
     }
 }

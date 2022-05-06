@@ -17,12 +17,12 @@ class PriceListsRestApiDependencyProviderTest extends Unit
     protected $containerMock;
 
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|\Spryker\Client\Kernel\Locator
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Client\Kernel\Locator|mixed
      */
     protected $locatorMock;
 
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|\Spryker\Shared\Kernel\BundleProxy
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Shared\Kernel\BundleProxy|mixed
      */
     protected $bundleProxyMock;
 
@@ -83,12 +83,12 @@ class PriceListsRestApiDependencyProviderTest extends Unit
 
         static::assertInstanceOf(
             PriceListsRestApiToPriceListClientInterface::class,
-            $container[PriceListsRestApiDependencyProvider::CLIENT_PRICE_LIST]
+            $container[PriceListsRestApiDependencyProvider::CLIENT_PRICE_LIST],
         );
 
         static::assertCount(
             0,
-            $container[PriceListsRestApiDependencyProvider::PLUGINS_FILTER_FIELDS_EXPANDER]
+            $container[PriceListsRestApiDependencyProvider::PLUGINS_FILTER_FIELDS_EXPANDER],
         );
     }
 }

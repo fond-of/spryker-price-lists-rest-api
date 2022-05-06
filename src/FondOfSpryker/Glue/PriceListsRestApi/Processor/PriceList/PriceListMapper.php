@@ -19,7 +19,7 @@ class PriceListMapper implements PriceListMapperInterface
     ): RestPriceListAttributesTransfer {
         return $restPriceListAttributesTransfer->fromArray(
             $priceListTransfer->toArray(),
-            true
+            true,
         );
     }
 }

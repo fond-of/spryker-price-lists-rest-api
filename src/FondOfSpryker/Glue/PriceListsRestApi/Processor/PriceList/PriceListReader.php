@@ -85,7 +85,7 @@ class PriceListReader implements PriceListReaderInterface
 
         return $this->addPriceListCollectionTransferToResponse(
             $priceListCollectionTransfer,
-            $this->restResourceBuilder->createRestResponse()
+            $this->restResourceBuilder->createRestResponse(),
         );
     }
 
@@ -122,7 +122,7 @@ class PriceListReader implements PriceListReaderInterface
 
         return $this->addPriceListTransferToResponse(
             $priceListTransfers->offsetGet(0),
-            $restResponse
+            $restResponse,
         );
     }
 
@@ -155,13 +155,13 @@ class PriceListReader implements PriceListReaderInterface
     ): RestResponseInterface {
         $restPriceListAttributesTransfer = $this->priceListMapper->mapPriceListTransferToRestPriceListAttributesTransfer(
             $priceListTransfer,
-            new RestPriceListAttributesTransfer()
+            new RestPriceListAttributesTransfer(),
         );
 
         $restResource = $this->restResourceBuilder->createRestResource(
             PriceListsRestApiConfig::RESOURCE_PRICE_LISTS,
             $priceListTransfer->getUuid(),
-            $restPriceListAttributesTransfer
+            $restPriceListAttributesTransfer,
         );
 
         return $restResponse->addResource($restResource);

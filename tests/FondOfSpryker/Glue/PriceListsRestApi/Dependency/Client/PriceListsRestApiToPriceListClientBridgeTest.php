@@ -37,7 +37,7 @@ class PriceListsRestApiToPriceListClientBridgeTest extends Unit
             ->getMock();
 
         $this->bridge = new PriceListsRestApiToPriceListClientBridge(
-            $this->priceListClientMock
+            $this->priceListClientMock,
         );
     }
 
@@ -54,8 +54,8 @@ class PriceListsRestApiToPriceListClientBridgeTest extends Unit
         $this->assertEquals(
             $this->priceListListTransferMock,
             $this->bridge->findPriceLists(
-                $this->priceListListTransferMock
-            )
+                $this->priceListListTransferMock,
+            ),
         );
     }
 }

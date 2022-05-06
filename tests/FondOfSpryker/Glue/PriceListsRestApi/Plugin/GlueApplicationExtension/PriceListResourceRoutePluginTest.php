@@ -40,14 +40,14 @@ class PriceListResourceRoutePluginTest extends Unit
             ->method('addGet')
             ->with(
                 PriceListsRestApiConfig::ACTION_PRICE_LISTS_GET,
-                true
+                true,
             )->willReturn($this->resourceRouteCollectionMock);
 
         static::assertEquals(
             $this->resourceRouteCollectionMock,
             $this->plugin->configure(
-                $this->resourceRouteCollectionMock
-            )
+                $this->resourceRouteCollectionMock,
+            ),
         );
     }
 
@@ -58,7 +58,7 @@ class PriceListResourceRoutePluginTest extends Unit
     {
         static::assertEquals(
             PriceListsRestApiConfig::RESOURCE_PRICE_LISTS,
-            $this->plugin->getResourceType()
+            $this->plugin->getResourceType(),
         );
     }
 
@@ -69,7 +69,7 @@ class PriceListResourceRoutePluginTest extends Unit
     {
         static::assertEquals(
             PriceListsRestApiConfig::CONTROLLER_PRICE_LISTS,
-            $this->plugin->getController()
+            $this->plugin->getController(),
         );
     }
 
@@ -80,7 +80,7 @@ class PriceListResourceRoutePluginTest extends Unit
     {
         static::assertEquals(
             RestPriceListAttributesTransfer::class,
-            $this->plugin->getResourceAttributesClassName()
+            $this->plugin->getResourceAttributesClassName(),
         );
     }
 }

@@ -134,7 +134,7 @@ class PriceListReaderTest extends Unit
             $this->restApiErrorMock,
             $this->priceListClientMock,
             $this->priceListMapperMock,
-            $this->filterFieldsExpanderPluginMocks
+            $this->filterFieldsExpanderPluginMocks,
         );
     }
 
@@ -151,7 +151,7 @@ class PriceListReaderTest extends Unit
             ->with($this->restRequestMock, static::callback(
                 static function (ArrayObject $filterFieldTransfers) {
                     return $filterFieldTransfers->count() === 0;
-                }
+                },
             ))->willReturn($filterFieldTransfer);
 
         $this->priceListClientMock->expects(static::atLeastOnce())
@@ -162,8 +162,8 @@ class PriceListReaderTest extends Unit
                         return $priceListListTransfer->getQueryJoins() === null
                             && $priceListListTransfer->getPriceLists()->count() === 0
                             && $priceListListTransfer->getFilterFields() === $filterFieldTransfer;
-                    }
-                )
+                    },
+                ),
             )->willReturn($this->priceListListTransferMock);
 
         $this->priceListListTransferMock->expects(static::atLeastOnce())
@@ -178,7 +178,7 @@ class PriceListReaderTest extends Unit
             ->method('mapPriceListTransferToRestPriceListAttributesTransfer')
             ->with(
                 $this->priceListTransferMock,
-                new RestPriceListAttributesTransfer()
+                new RestPriceListAttributesTransfer(),
             )->willReturn($this->restPriceListAttributesTransferMock);
 
         $this->priceListTransferMock->expects(static::atLeastOnce())
@@ -190,7 +190,7 @@ class PriceListReaderTest extends Unit
             ->with(
                 PriceListsRestApiConfig::RESOURCE_PRICE_LISTS,
                 $uuid,
-                $this->restPriceListAttributesTransferMock
+                $this->restPriceListAttributesTransferMock,
             )->willReturn($this->restResourceMock);
 
         $this->restResponseMock->expects(static::atLeastOnce())
@@ -200,7 +200,7 @@ class PriceListReaderTest extends Unit
 
         static::assertEquals(
             $this->restResponseMock,
-            $this->priceListReader->getAllPriceLists($this->restRequestMock)
+            $this->priceListReader->getAllPriceLists($this->restRequestMock),
         );
     }
 
@@ -232,7 +232,7 @@ class PriceListReaderTest extends Unit
             ->with($this->restRequestMock, static::callback(
                 static function (ArrayObject $filterFieldTransfers) {
                     return $filterFieldTransfers->count() === 0;
-                }
+                },
             ))->willReturn($filterFieldTransfer);
 
         $this->priceListClientMock->expects(static::atLeastOnce())
@@ -243,8 +243,8 @@ class PriceListReaderTest extends Unit
                         return $priceListListTransfer->getQueryJoins() === null
                             && $priceListListTransfer->getPriceLists()->count() === 0
                             && $priceListListTransfer->getFilterFields() === $filterFieldTransfer;
-                    }
-                )
+                    },
+                ),
             )->willReturn($this->priceListListTransferMock);
 
         $this->priceListListTransferMock->expects(static::atLeastOnce())
@@ -255,7 +255,7 @@ class PriceListReaderTest extends Unit
             ->method('mapPriceListTransferToRestPriceListAttributesTransfer')
             ->with(
                 $this->priceListTransferMock,
-                new RestPriceListAttributesTransfer()
+                new RestPriceListAttributesTransfer(),
             )->willReturn($this->restPriceListAttributesTransferMock);
 
         $this->priceListTransferMock->expects(static::atLeastOnce())
@@ -270,7 +270,7 @@ class PriceListReaderTest extends Unit
             ->with(
                 PriceListsRestApiConfig::RESOURCE_PRICE_LISTS,
                 $uuid,
-                $this->restPriceListAttributesTransferMock
+                $this->restPriceListAttributesTransferMock,
             )->willReturn($this->restResourceMock);
 
         $this->restResponseMock->expects(static::atLeastOnce())
@@ -280,7 +280,7 @@ class PriceListReaderTest extends Unit
 
         static::assertEquals(
             $this->restResponseMock,
-            $this->priceListReader->getPriceListByUuid($this->restRequestMock)
+            $this->priceListReader->getPriceListByUuid($this->restRequestMock),
         );
     }
 
@@ -328,7 +328,7 @@ class PriceListReaderTest extends Unit
 
         static::assertEquals(
             $this->restResponseMock,
-            $this->priceListReader->getPriceListByUuid($this->restRequestMock)
+            $this->priceListReader->getPriceListByUuid($this->restRequestMock),
         );
     }
 
@@ -360,7 +360,7 @@ class PriceListReaderTest extends Unit
             ->with($this->restRequestMock, static::callback(
                 static function (ArrayObject $filterFieldTransfers) {
                     return $filterFieldTransfers->count() === 0;
-                }
+                },
             ))->willReturn($filterFieldTransfer);
 
         $this->priceListClientMock->expects(static::atLeastOnce())
@@ -371,8 +371,8 @@ class PriceListReaderTest extends Unit
                         return $priceListListTransfer->getQueryJoins() === null
                             && $priceListListTransfer->getPriceLists()->count() === 0
                             && $priceListListTransfer->getFilterFields() === $filterFieldTransfer;
-                    }
-                )
+                    },
+                ),
             )->willReturn($this->priceListListTransferMock);
 
         $this->priceListListTransferMock->expects(static::atLeastOnce())
@@ -395,7 +395,7 @@ class PriceListReaderTest extends Unit
 
         static::assertEquals(
             $this->restResponseMock,
-            $this->priceListReader->getPriceListByUuid($this->restRequestMock)
+            $this->priceListReader->getPriceListByUuid($this->restRequestMock),
         );
     }
 }

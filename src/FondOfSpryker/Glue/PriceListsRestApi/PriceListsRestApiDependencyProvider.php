@@ -8,8 +8,14 @@ use Spryker\Glue\Kernel\Container;
 
 class PriceListsRestApiDependencyProvider extends AbstractBundleDependencyProvider
 {
+    /**
+     * @var string
+     */
     public const CLIENT_PRICE_LIST = 'CLIENT_PRICE_LIST';
 
+    /**
+     * @var string
+     */
     public const PLUGINS_FILTER_FIELDS_EXPANDER = 'PLUGINS_FILTER_FIELDS_EXPANDER';
 
     /**
@@ -35,7 +41,7 @@ class PriceListsRestApiDependencyProvider extends AbstractBundleDependencyProvid
     {
         $container[static::CLIENT_PRICE_LIST] = static function (Container $container) {
             return new PriceListsRestApiToPriceListClientBridge(
-                $container->getLocator()->priceList()->client()
+                $container->getLocator()->priceList()->client(),
             );
         };
 

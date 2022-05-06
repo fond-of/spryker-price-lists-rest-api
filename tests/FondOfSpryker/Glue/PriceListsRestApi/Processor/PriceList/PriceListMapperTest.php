@@ -57,8 +57,8 @@ class PriceListMapperTest extends Unit
             RestPriceListAttributesTransfer::class,
             $this->priceListMapper->mapPriceListTransferToRestPriceListAttributesTransfer(
                 $this->priceListTransferMock,
-                $this->restPriceListAttributesTransferMock
-            )
+                $this->restPriceListAttributesTransferMock,
+            ),
         );
     }
 }
