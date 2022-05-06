@@ -11,12 +11,12 @@ use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
 class PriceListFilterFieldsExpanderPluginTest extends Unit
 {
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface|mixed
      */
     protected $restRequestMock;
 
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceInterface|mixed
      */
     protected $restResourceMock;
 
@@ -64,11 +64,11 @@ class PriceListFilterFieldsExpanderPluginTest extends Unit
         static::assertCount(1, $filterFieldTransfers);
         static::assertEquals(
             PriceListsRestApiConstants::FILTER_FIELD_TYPE_PRICE_LIST_UUID,
-            $filterFieldTransfers->offsetGet(0)->getType()
+            $filterFieldTransfers->offsetGet(0)->getType(),
         );
         static::assertEquals(
             $uuid,
-            $filterFieldTransfers->offsetGet(0)->getValue()
+            $filterFieldTransfers->offsetGet(0)->getValue(),
         );
     }
 

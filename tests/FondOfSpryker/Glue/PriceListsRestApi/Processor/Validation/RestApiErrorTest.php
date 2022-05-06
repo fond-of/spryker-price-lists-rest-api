@@ -45,15 +45,15 @@ class RestApiErrorTest extends Unit
                         return $restErrorMessageTransfer->getCode() === PriceListsRestApiConfig::RESPONSE_CODE_PRICE_LIST_NOT_FOUND
                             && $restErrorMessageTransfer->getStatus() === Response::HTTP_NOT_FOUND
                             && $restErrorMessageTransfer->getDetail() === PriceListsRestApiConfig::RESPONSE_DETAILS_PRICE_LIST_NOT_FOUND;
-                    }
-                )
+                    },
+                ),
             )->willReturnSelf();
 
         static::assertEquals(
             $this->restResponseMock,
             $this->restApiError->addPriceListNotFoundError(
-                $this->restResponseMock
-            )
+                $this->restResponseMock,
+            ),
         );
     }
 
@@ -70,15 +70,15 @@ class RestApiErrorTest extends Unit
                         return $restErrorMessageTransfer->getCode() === PriceListsRestApiConfig::RESPONSE_CODE_UUID_MISSING
                             && $restErrorMessageTransfer->getStatus() === Response::HTTP_BAD_REQUEST
                             && $restErrorMessageTransfer->getDetail() === PriceListsRestApiConfig::RESPONSE_DETAILS_UUID_MISSING;
-                    }
-                )
+                    },
+                ),
             )->willReturnSelf();
 
         static::assertEquals(
             $this->restResponseMock,
             $this->restApiError->addPriceListIdMissingError(
-                $this->restResponseMock
-            )
+                $this->restResponseMock,
+            ),
         );
     }
 }

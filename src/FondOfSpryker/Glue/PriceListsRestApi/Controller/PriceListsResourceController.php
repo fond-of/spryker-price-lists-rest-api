@@ -11,7 +11,7 @@ use Spryker\Glue\Kernel\Controller\AbstractController;
  */
 class PriceListsResourceController extends AbstractController
 {
-    /***
+    /**
      * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
      *
      * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface

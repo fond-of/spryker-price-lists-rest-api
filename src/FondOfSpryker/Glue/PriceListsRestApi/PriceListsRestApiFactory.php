@@ -23,7 +23,7 @@ class PriceListsRestApiFactory extends AbstractFactory
             $this->createRestApiError(),
             $this->getPriceListClient(),
             $this->createPriceListMapper(),
-            $this->getFilterFieldsExpanderPlugins()
+            $this->getFilterFieldsExpanderPlugins(),
         );
     }
 

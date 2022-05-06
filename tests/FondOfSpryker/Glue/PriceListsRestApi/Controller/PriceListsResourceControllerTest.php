@@ -119,8 +119,8 @@ class PriceListsResourceControllerTest extends Unit
         static::assertEquals(
             $this->restResponseMock,
             $this->priceListsResourceController->getAction(
-                $this->restRequestMock
-            )
+                $this->restRequestMock,
+            ),
         );
     }
 
@@ -149,8 +149,8 @@ class PriceListsResourceControllerTest extends Unit
         static::assertEquals(
             $this->restResponseMock,
             $this->priceListsResourceController->getAction(
-                $this->restRequestMock
-            )
+                $this->restRequestMock,
+            ),
         );
     }
 }
